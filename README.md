@@ -67,34 +67,36 @@ Log out and back in after changing groups.
 
 Edit [`hotkeys.ini`](./hotkeys.ini) to change bindings. Keys use Linux `evdev` names such as `KEY_A`, `KEY_SPACE`, and `KEY_LEFTSHIFT`.
 
-The numbered entries map to:
+The default [`hotkeys.ini`](./hotkeys.ini) currently ships with these bindings:
 
-| # | Button |
-|---|--------|
-| 1 | Analog Up |
-| 2 | Analog Down |
-| 3 | Analog Left |
-| 4 | Analog Right |
-| 5 | ModX |
-| 6 | ModY |
-| 7 | A |
-| 8 | B |
-| 9 | L |
-| 10 | R |
-| 11 | X |
-| 12 | Y |
-| 13 | Z |
-| 14 | C-Up |
-| 15 | C-Down |
-| 16 | C-Left |
-| 17 | C-Right |
-| 18 | Light Shield |
-| 19 | Mid Shield |
-| 20 | Start |
-| 21 | D-Up |
-| 22 | D-Down |
-| 23 | D-Left |
-| 24 | D-Right |
+| # | Button | `evdev` key | Typical US keycap |
+|---|--------|-------------|-------------------|
+| 1 | Analog Up | `KEY_RIGHTBRACE` | `]` |
+| 2 | Analog Down | `KEY_3` | `3` |
+| 3 | Analog Left | `KEY_2` | `2` |
+| 4 | Analog Right | `KEY_4` | `4` |
+| 5 | ModX | `KEY_V` | `V` |
+| 6 | ModY | `KEY_B` | `B` |
+| 7 | A | `KEY_M` | `M` |
+| 8 | B | `KEY_O` | `O` |
+| 9 | L | `KEY_Q` | `Q` |
+| 10 | R | `KEY_9` | `9` |
+| 11 | X | `KEY_P` | `P` |
+| 12 | Y | `KEY_0` | `0` |
+| 13 | Z | `KEY_LEFTBRACE` | `[` |
+| 14 | C-Up | `KEY_K` | `K` |
+| 15 | C-Down | `KEY_SPACE` | `Space` |
+| 16 | C-Left | `KEY_N` | `N` |
+| 17 | C-Right | `KEY_COMMA` | `,` |
+| 18 | Light Shield | `KEY_MINUS` | `-` |
+| 19 | Mid Shield | `KEY_EQUAL` | `=` |
+| 20 | Start | `KEY_7` | `7` |
+| 21 | D-Up | `KEY_UP` | `Up Arrow` |
+| 22 | D-Down | `KEY_DOWN` | `Down Arrow` |
+| 23 | D-Left | `KEY_LEFT` | `Left Arrow` |
+| 24 | D-Right | `KEY_RIGHT` | `Right Arrow` |
+
+The keycap column assumes a US keyboard layout. `evdev` codes are the source of truth.
 
 ## Command-Line Options
 
