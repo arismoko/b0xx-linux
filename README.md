@@ -12,43 +12,51 @@ This project currently targets Linux only. The controller output is modeled arou
 
 - Linux
 - Python 3.9+
-- `python-evdev`
+- `uv` (recommended)
 - A kernel with the `uinput` module available
 - Dolphin emulator
 
 ## Setup
 
-1. Install the dependency:
+1. Install `uv` if you do not already have it:
 
 ```bash
-python3 -m pip install evdev
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-2. Load the `uinput` module:
+2. Sync the project environment:
+
+```bash
+uv sync
+```
+
+3. Load the `uinput` module:
 
 ```bash
 sudo modprobe uinput
 ```
 
-3. List available keyboards to find yours:
+4. List available keyboards to find yours:
 
 ```bash
-sudo python3 b0xx.py --list
+sudo .venv/bin/python b0xx.py --list
 ```
 
-4. Start the emulator with an explicit keyboard:
+5. Start the emulator with an explicit keyboard:
 
 ```bash
-sudo python3 b0xx.py --keyboard /dev/input/eventX
+sudo .venv/bin/python b0xx.py --keyboard /dev/input/eventX
 ```
 
 Or let it auto-detect:
 
 ```bash
-sudo python3 b0xx.py
+sudo .venv/bin/python b0xx.py
 ```
 
-5. In Dolphin, set Player 1 to `Standard Controller`, open the controller config, select `B0XX Virtual Controller` as the device, and map inputs to match [`dolphin-profile.ini`](./dolphin-profile.ini).
+6. In Dolphin, set Player 1 to `Standard Controller`, open the controller config, select `B0XX Virtual Controller` as the device, and map inputs to match [`dolphin-profile.ini`](./dolphin-profile.ini).
+
+If you prefer not to use `uv`, installing `evdev` manually with `python3 -m pip install evdev` also works.
 
 ## Running Without Root
 
@@ -120,7 +128,7 @@ Then load it from Dolphin's controller configuration UI.
 Run the test suite with:
 
 ```bash
-./.venv/bin/python -m pytest -q
+uv run pytest -q
 ```
 
 ## Acknowledgements
