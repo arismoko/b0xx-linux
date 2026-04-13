@@ -1,0 +1,27 @@
+[project]
+name = "b0xx-linux"
+version = "0.1.0"
+description = "Keyboard-to-B0XX controller emulator for Dolphin on Linux"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+dependencies = [
+    "evdev>=1.9.3",
+]
+keywords = ["b0xx", "dolphin", "melee", "linux", "evdev"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Games/Entertainment",
+    "Topic :: System :: Hardware",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
