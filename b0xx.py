@@ -94,11 +94,12 @@ HOTKEY_NAMES = {
     24: "D-pad Right",
 }
 
-# evdev stick axes are centered around 0. Using a vJoy-style 0..32767 range makes
-# the virtual device look "always positive" to consumers that expect signed axes.
-STICK_AXIS_MIN = -32768
+# Match the upstream AHK/vJoy axis model closely: unsigned 0..32767 axes with
+# midpoint offsets, and an effective movement slope of 10271 away from center.
+STICK_AXIS_MIN = 0
 STICK_AXIS_MAX = 32767
-STICK_AXIS_MID = 0
+STICK_AXIS_CENTER_X = 16448
+STICK_AXIS_CENTER_Y = 16320
 
 # Keep the analog shoulder on a simple positive-only range.
 TRIGGER_AXIS_MIN = 0
@@ -331,13 +332,9 @@ class B0XXState:
 
 
 def convert_coords(coords):
-    """Convert Melee coords (-1..1) to signed evdev stick axis values.
-
-    vJoy used an unsigned 0..32767 range with an offset center. evdev stick axes
-    are normally centered at 0, and Dolphin's evdev backend expects that model.
-    """
-    x = int(coords[0] * STICK_AXIS_MAX)
-    y = int(-coords[1] * STICK_AXIS_MAX)
+    """Convert Melee coords (-1..1) to vJoy-compatible absolute axis values."""
+    x = int(round((coords[0] * 10271) + STICK_AXIS_CENTER_X))
+    y = int(round((-coords[1] * 10271) + STICK_AXIS_CENTER_Y))
     return (x, y)
 
 
@@ -351,13 +348,14 @@ class VirtualGamepad:
 
     def __init__(self):
         # Define axes: X, Y (left stick), RX, RY (c-stick), Z (analog shoulder)
-        # Sticks are signed and centered at 0; trigger is positive-only.
+        # Match the original vJoy layout: unsigned absolute stick axes plus a
+        # positive-only trigger axis.
         abs_caps = [
-            (ecodes.ABS_X, AbsInfo(value=STICK_AXIS_MID, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
-            (ecodes.ABS_Y, AbsInfo(value=STICK_AXIS_MID, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
+            (ecodes.ABS_X, AbsInfo(value=STICK_AXIS_CENTER_X, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
+            (ecodes.ABS_Y, AbsInfo(value=STICK_AXIS_CENTER_Y, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
             (ecodes.ABS_Z, AbsInfo(value=TRIGGER_AXIS_MID, min=TRIGGER_AXIS_MIN, max=TRIGGER_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
-            (ecodes.ABS_RX, AbsInfo(value=STICK_AXIS_MID, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
-            (ecodes.ABS_RY, AbsInfo(value=STICK_AXIS_MID, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
+            (ecodes.ABS_RX, AbsInfo(value=STICK_AXIS_CENTER_X, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
+            (ecodes.ABS_RY, AbsInfo(value=STICK_AXIS_CENTER_Y, min=STICK_AXIS_MIN, max=STICK_AXIS_MAX, fuzz=0, flat=0, resolution=0)),
         ]
 
         # 12 buttons (matching vJoy config: buttons 1-12)

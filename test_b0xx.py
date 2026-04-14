@@ -7,7 +7,8 @@ from b0xx import (
     convert_coords,
     convert_analog_r,
     STICK_AXIS_MAX,
-    STICK_AXIS_MID,
+    STICK_AXIS_CENTER_X,
+    STICK_AXIS_CENTER_Y,
     TRIGGER_AXIS_MAX,
     TRIGGER_AXIS_MIN,
     COORDS_ORIGIN,
@@ -60,34 +61,44 @@ def s():
 class TestConvertCoords:
     def test_origin(self):
         x, y = convert_coords((0.0, 0.0))
-        assert x == STICK_AXIS_MID
-        assert y == STICK_AXIS_MID
+        assert x == STICK_AXIS_CENTER_X
+        assert y == STICK_AXIS_CENTER_Y
 
     def test_full_right(self):
         x, y = convert_coords((1.0, 0.0))
-        assert x == STICK_AXIS_MAX
-        assert y == STICK_AXIS_MID
+        assert x == int(round(STICK_AXIS_CENTER_X + 10271))
+        assert y == STICK_AXIS_CENTER_Y
 
     def test_full_up(self):
         x, y = convert_coords((0.0, 1.0))
-        assert x == STICK_AXIS_MID
-        assert y == -STICK_AXIS_MAX  # Y inverted: up = negative value
+        assert x == STICK_AXIS_CENTER_X
+        assert y == int(round(STICK_AXIS_CENTER_Y - 10271))
 
     def test_full_down(self):
         x, y = convert_coords((0.0, -1.0))
-        assert x == STICK_AXIS_MID
-        assert y == STICK_AXIS_MAX  # Y inverted: down = positive value
+        assert x == STICK_AXIS_CENTER_X
+        assert y == int(round(STICK_AXIS_CENTER_Y + 10271))
 
     def test_full_left(self):
         x, y = convert_coords((-1.0, 0.0))
-        assert x == -STICK_AXIS_MAX
+        assert x == int(round(STICK_AXIS_CENTER_X - 10271))
 
     def test_symmetry(self):
-        """Positive and negative should be perfectly symmetric around center."""
         xr, yr = convert_coords((0.5, 0.5))
         xl, yl = convert_coords((-0.5, -0.5))
-        assert abs(xr + xl) <= 1
-        assert abs(yr + yl) <= 1
+        assert abs((xr - STICK_AXIS_CENTER_X) + (xl - STICK_AXIS_CENTER_X)) <= 1
+        assert abs((yr - STICK_AXIS_CENTER_Y) + (yl - STICK_AXIS_CENTER_Y)) <= 1
+
+    def test_matches_upstream_ahk_effective_range(self):
+        coords = (0.7375, 0.3125)
+        x, y = convert_coords(coords)
+        assert x == int(round((coords[0] * 10271) + STICK_AXIS_CENTER_X))
+        assert y == int(round((-coords[1] * 10271) + STICK_AXIS_CENTER_Y))
+
+    def test_up_mod_x_matches_upstream_raw_axis(self):
+        x, y = convert_coords(COORDS_VERTICAL_MOD_X)
+        assert x == STICK_AXIS_CENTER_X
+        assert y == int(round(STICK_AXIS_CENTER_Y - (COORDS_VERTICAL_MOD_X[1] * 10271)))
 
 
 # ============================================================
