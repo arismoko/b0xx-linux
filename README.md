@@ -4,6 +4,10 @@
 
 It uses `python-evdev` for keyboard input capture and Linux `uinput` for virtual gamepad output.
 
+## ⚠️ Maintenance Status
+
+**This project is no longer maintained.** Development efforts have shifted to a newer project: **[key-b0x](https://github.com/arismoko/key-b0x)** — please check that out instead.
+
 ## Status
 
 This project currently targets Linux only. The controller output is modeled around signed `evdev` stick axes centered at `0`, which matches Dolphin's `evdev` backend.
